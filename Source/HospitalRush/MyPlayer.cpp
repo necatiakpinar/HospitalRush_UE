@@ -28,6 +28,8 @@ void AMyPlayer::BeginPlay()
 	Super::BeginPlay();
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMyPlayer::OnOverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AMyPlayer::OnOverlapEnd);
+
+	BossDied.AddDynamic(this, &AMyPlayer::OnBossDied);
 }
 
 // Called every frame
@@ -84,7 +86,7 @@ void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 
 	if (actionArea)
 	{
-		actionArea->StartAction();
+		actionArea->StartAction(this);
 	}
 }
 
@@ -96,4 +98,9 @@ void AMyPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 	{
 		actionArea->EndAction();
 	}
+}
+
+void AMyPlayer::OnBossDied(FVector location)
+{
+	UE_LOG(LogTemp, Warning, TEXT("BOSS DIED!"));
 }

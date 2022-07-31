@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "Treatment.h"
+#include "MyPlayer.h"
 #include "ActionArea.h"
 
 // Sets default values
@@ -16,6 +18,7 @@ AActionArea::AActionArea()
 void AActionArea::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 // Called every frame
@@ -25,8 +28,9 @@ void AActionArea::Tick(float DeltaTime)
 }
 
 
-void AActionArea::StartAction()
+void AActionArea::StartAction(AMyPlayer* pPlayer)
 {
+	player = pPlayer;
 	GetWorldTimerManager().SetTimer(timeHandler, this, &AActionArea::ActionFinished, TimerDuration, true, TimerDuration);
 }
 
@@ -40,5 +44,12 @@ void AActionArea::ActionFinished()
 	if (canActionPerform)
 	{	
 		UE_LOG(LogTemp, Warning, TEXT("Action performed!"));
+		if (player)
+			player->BossDied.Broadcast(FVector(0.0f));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Action CAN'T performed!"));
 	}
 }
+

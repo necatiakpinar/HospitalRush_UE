@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ActionArea.generated.h"
 
+
+class AMyPlayer;
 UCLASS()
 class HOSPITALRUSH_API AActionArea : public AActor
 {
@@ -16,11 +18,12 @@ public:
 	AActionArea();
 
 public:
-	float canActionPerform;
+	bool canActionPerform;
 
 private:
 	FTimerHandle timeHandler;
 	float TimerDuration;
+	AMyPlayer* player;
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,7 +34,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	void StartAction();
+	void StartAction(AMyPlayer* pPlayer);
 	void EndAction();
 	void ActionFinished();
 

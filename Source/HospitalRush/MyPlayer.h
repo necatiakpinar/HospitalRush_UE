@@ -10,6 +10,9 @@
 #include "MyPlayer.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBossDied, FVector, location);
+
+
 class UStaticMeshComponent;
 class AActionArea;
 class APatient;
@@ -29,6 +32,11 @@ public:
 	UFUNCTION()
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION()
+		void OnBossDied(FVector location);
+
+	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers") FOnBossDied BossDied;
+
 
 public:
 	USceneComponent* root;
@@ -40,6 +48,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Enery;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Mood;
+
+
+
+		
 
 private:
 	float currentZHeight;

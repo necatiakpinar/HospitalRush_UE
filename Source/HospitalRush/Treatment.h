@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Treatment.generated.h"
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpawnTreatment, FVector, location);
+
 UCLASS()
 class HOSPITALRUSH_API ATreatment : public AActor
 {
@@ -14,6 +16,9 @@ class HOSPITALRUSH_API ATreatment : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATreatment();
+
+//public:
+//	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers") FSpawnTreatment SpawnTreatment;
 
 protected:
 	// Called when the game starts or when spawned

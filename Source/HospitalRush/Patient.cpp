@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "MyPlayer.h"
 #include "Patient.h"
 
 // Sets default values
@@ -17,7 +18,17 @@ APatient::APatient()
 void APatient::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (UWorld* world = GetWorld())
+	{
+		TArray<AActor*> outputActors;
+		UGameplayStatics::GetAllActorsOfClass(world, AMyPlayer::StaticClass(), outputActors);
+
+		if (outputActors.Num() > 0 && outputActors[0] != nullptr)
+			player = Cast<AMyPlayer>(outputActors[0]);
+	}
+
+	if (player)
+		player->BossDied.AddDynamic(this, &APatient::BossDied);
 }
 
 // Called every frame
@@ -27,6 +38,10 @@ void APatient::Tick(float DeltaTime)
 
 }
 
+void APatient::BossDied(FVector location)
+{
+	Destroy();
+}
 
 void APatient::Grapped(AActor* pPlayer, USceneComponent* pHolder)
 {
@@ -36,6 +51,8 @@ void APatient::Grapped(AActor* pPlayer, USceneComponent* pHolder)
 	SetActorRotation(FRotator(0.0f,0.0f, -90.0f));
 
 }
+
+
 
 void APatient::SleepOnBed(AActor* pBed)
 {

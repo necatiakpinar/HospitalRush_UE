@@ -18,10 +18,14 @@ public:
 	// Sets default values for this character's properties
 	APatient();
 
-
+public:
+	AMyPlayer* player;
 public:
 	UFUNCTION()
 	void Grapped(AActor* pPlayer, USceneComponent* pHolder);
+
+	UFUNCTION()
+		void BossDied(FVector location);
 
 	void SleepOnBed(AActor* pBed);
 
