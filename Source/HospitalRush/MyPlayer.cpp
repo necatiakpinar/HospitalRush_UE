@@ -4,6 +4,7 @@
 #include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
 #include "Patient.h"
 #include "Bed.h"
+#include "ActionArea.h"
 #include "MyPlayer.h"
 
 // Sets default values
@@ -61,10 +62,11 @@ APatient* AMyPlayer::GetFirstAvailablePatient()
 
 void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-//	UE_LOG(LogTemp, Warning, TEXT("STARTED!"));
+	UE_LOG(LogTemp, Warning, TEXT("STARTED!"));
 	APatient* patient = Cast<APatient>(OtherActor);
 	ABed* bed = Cast<ABed>(OtherActor);
-	
+	AActionArea* actionArea= Cast<AActionArea>(OtherActor);
+
 	if (patient)
 	{
 		patient->Grapped(Cast<AActor>(this), holderComponent);
@@ -79,9 +81,19 @@ void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 			RemovePatient(GetFirstAvailablePatient());
 		}
 	}
+
+	if (actionArea)
+	{
+		actionArea->StartAction();
+	}
 }
 
 void AMyPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("ENDED!"));
+	UE_LOG(LogTemp, Warning, TEXT("ENDED!"));
+	AActionArea* actionArea = Cast<AActionArea>(OtherActor);
+	if (actionArea)
+	{
+		actionArea->EndAction();
+	}
 }

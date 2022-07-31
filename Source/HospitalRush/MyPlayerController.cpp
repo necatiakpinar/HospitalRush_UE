@@ -54,7 +54,7 @@ void AMyPlayerController::Tick(float DeltaTime)
 
     //DeprojectMousePositionToWorld(currentMousePosition, mouseDirection);
     GetMousePosition(currentMousePosition.X, currentMousePosition.Z);
-    PlayerMovement(DeltaTime);
+    //PlayerMovement(DeltaTime);
     //UE_LOG(LogTemp, Warning, TEXT("%s"), *currentMousePosition.ToString());
 
 }

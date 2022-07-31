@@ -11,6 +11,7 @@
 
 
 class UStaticMeshComponent;
+class AActionArea;
 class APatient;
 class ABed;
 UCLASS()
