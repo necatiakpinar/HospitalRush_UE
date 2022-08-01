@@ -18,17 +18,10 @@ APatient::APatient()
 void APatient::BeginPlay()
 {
 	Super::BeginPlay();
-	if (UWorld* world = GetWorld())
-	{
-		TArray<AActor*> outputActors;
-		UGameplayStatics::GetAllActorsOfClass(world, AMyPlayer::StaticClass(), outputActors);
-
-		if (outputActors.Num() > 0 && outputActors[0] != nullptr)
-			player = Cast<AMyPlayer>(outputActors[0]);
-	}
+	/*player = Cast<AMyPlayer>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
 	if (player)
-		player->BossDied.AddDynamic(this, &APatient::BossDied);
+		player->BossDied.AddDynamic(this, &APatient::BossDied);*/
 }
 
 // Called every frame

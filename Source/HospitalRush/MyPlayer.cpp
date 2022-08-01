@@ -29,7 +29,7 @@ void AMyPlayer::BeginPlay()
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMyPlayer::OnOverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AMyPlayer::OnOverlapEnd);
 
-	BossDied.AddDynamic(this, &AMyPlayer::OnBossDied);
+	//BossDied.AddDynamic(this, &AMyPlayer::OnBossDied);
 }
 
 // Called every frame

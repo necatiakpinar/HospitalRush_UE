@@ -7,6 +7,13 @@
 #include "ActionArea.generated.h"
 
 
+UENUM(BlueprintType)
+enum class EActionType : uint8
+{
+	Treatment_Pill UMETA(DisplayName = "TreatmentPill"),
+	Treatment_Syrup UMETA(DisplayName = "TreatmentSyrup")
+};
+
 class AMyPlayer;
 UCLASS()
 class HOSPITALRUSH_API AActionArea : public AActor
@@ -19,6 +26,7 @@ public:
 
 public:
 	bool canActionPerform;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) EActionType actionType;
 
 private:
 	FTimerHandle timeHandler;

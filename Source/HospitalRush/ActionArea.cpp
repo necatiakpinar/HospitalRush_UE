@@ -10,7 +10,7 @@ AActionArea::AActionArea()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	TimerDuration = 2.0f;
+	TimerDuration = 1.0f;
 	canActionPerform = true;
 }
 
@@ -18,7 +18,12 @@ AActionArea::AActionArea()
 void AActionArea::BeginPlay()
 {
 	Super::BeginPlay();
-
+	//actionType = FindObject<UEnum>(ANY_PACKAGE, TEXT("EActionType"), true);
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *actionType->GetEnumName(0));
+	/*if (actionType == EActionType::Treatment_Pill)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WORKING"));
+	}*/
 }
 
 // Called every frame
@@ -44,8 +49,8 @@ void AActionArea::ActionFinished()
 	if (canActionPerform)
 	{	
 		UE_LOG(LogTemp, Warning, TEXT("Action performed!"));
-		if (player)
-			player->BossDied.Broadcast(FVector(0.0f));
+		/*if (player)
+			player->BossDied.Broadcast(FVector(0.0f))*/;
 	}
 	else
 	{

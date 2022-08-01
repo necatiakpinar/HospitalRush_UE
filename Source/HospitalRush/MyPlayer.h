@@ -10,7 +10,7 @@
 #include "MyPlayer.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBossDied, FVector, location);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBossDied, FVector, location);
 
 
 class UStaticMeshComponent;
@@ -35,7 +35,7 @@ public:
 	UFUNCTION()
 		void OnBossDied(FVector location);
 
-	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers") FOnBossDied BossDied;
+	//UPROPERTY(BlueprintAssignable, Category = "EventDispatchers") FOnBossDied BossDied;
 
 
 public:
@@ -49,9 +49,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Enery;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Mood;
 
-
-
-		
+	
 
 private:
 	float currentZHeight;
