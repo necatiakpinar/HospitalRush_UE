@@ -96,7 +96,7 @@ void AMyPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 	AActionArea* actionArea = Cast<AActionArea>(OtherActor);
 	if (actionArea)
 	{
-		actionArea->EndAction();
+		actionArea->CancelAction();
 	}
 }
 

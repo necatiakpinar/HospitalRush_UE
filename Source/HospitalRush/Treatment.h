@@ -6,8 +6,12 @@
 #include "GameFramework/Actor.h"
 #include "Treatment.generated.h"
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpawnTreatment, FVector, location);
 
+class FTreatmentHandler
+{
+public:
+	void OnTreatmentSpawn();
+};
 
 UENUM(BlueprintType)
 enum class ETreatmentType: uint8
@@ -31,11 +35,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSubclassOf<AActor> treatmentSyrupBP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) ETreatmentType treatmentType;
 
+
 private:
 	AActor* treatmentPill;
 	AActor* treatmentSyrup;
-//public:
-//	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers") FSpawnTreatment SpawnTreatment;
+public:
+	//static FSpawnTreatment OnSpawnTreatment;
 
 protected:
 	// Called when the game starts or when spawned

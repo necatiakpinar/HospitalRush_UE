@@ -9,6 +9,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class HOSPITALRUSH_API AHospitalRushGameModeBase : public AGameModeBase
 {

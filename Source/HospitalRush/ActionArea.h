@@ -32,6 +32,7 @@ private:
 	FTimerHandle timeHandler;
 	float TimerDuration;
 	AMyPlayer* player;
+	FString actionTypeAsString;
 
 protected:
 	// Called when the game starts or when spawned
@@ -43,7 +44,7 @@ public:
 
 
 	void StartAction(AMyPlayer* pPlayer);
-	void EndAction();
+	void CancelAction();
 	void ActionFinished();
 
 };

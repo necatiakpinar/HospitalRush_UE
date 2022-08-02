@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Treatment.h"
 #include "MyPlayer.h"
 #include "ActionArea.h"
@@ -18,13 +18,11 @@ AActionArea::AActionArea()
 void AActionArea::BeginPlay()
 {
 	Super::BeginPlay();
-	//actionType = FindObject<UEnum>(ANY_PACKAGE, TEXT("EActionType"), true);
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *actionType->GetEnumName(0));
-	/*if (actionType == EActionType::Treatment_Pill)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("WORKING"));
-	}*/
+	const TEnumAsByte<EActionType> ActionEnum = actionType;
+	actionTypeAsString = UEnum::GetValueAsString(ActionEnum.GetValue());
+
 }
+
 
 // Called every frame
 void AActionArea::Tick(float DeltaTime)
@@ -39,7 +37,7 @@ void AActionArea::StartAction(AMyPlayer* pPlayer)
 	GetWorldTimerManager().SetTimer(timeHandler, this, &AActionArea::ActionFinished, TimerDuration, true, TimerDuration);
 }
 
-void AActionArea::EndAction()
+void AActionArea::CancelAction()
 {
 	GetWorldTimerManager().ClearTimer(timeHandler);
 }
@@ -47,14 +45,36 @@ void AActionArea::EndAction()
 void AActionArea::ActionFinished()
 {
 	if (canActionPerform)
-	{	
+	{
 		UE_LOG(LogTemp, Warning, TEXT("Action performed!"));
 		/*if (player)
 			player->BossDied.Broadcast(FVector(0.0f))*/;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Action CAN'T performed!"));
+			//ATreatment:: OnSpawnTreatment.Broadcast(FVector(0.0f));
+			//ATreatment::OnSpawnTreatment.Broadcast(FVector(0.0f));
+			if (UWorld* world = GetWorld())
+			{
+				ATreatment* treatment;
+				TArray<AActor*> outputActors;
+				UGameplayStatics::GetAllActorsOfClass(world, ATreatment::StaticClass(), outputActors);
+
+				for (AActor* outputActor : outputActors)
+				{
+					treatment = Cast<ATreatment>(outputActor);
+					const TEnumAsByte<ETreatmentType> TreatmentEnum = treatment->treatmentType;
+					FString	stringTreatmentType = UEnum::GetValueAsString(TreatmentEnum.GetValue());
+					UE_LOG(LogTemp, Warning, TEXT("%s"),*actionTypeAsString);
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *stringTreatmentType);
+					if (actionTypeAsString == stringTreatmentType)
+					{
+						treatment->SpawnTreatment();
+					}
+				}
+			
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Action CAN'T performed!"));
+			}
 	}
 }
 

@@ -3,6 +3,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Treatment.h"
 
+
 // Sets default values
 ATreatment::ATreatment()
 {
@@ -16,7 +17,8 @@ void ATreatment::BeginPlay()
 {
 	Super::BeginPlay();
 	//SpawnTreatment();
-	
+
+
 }
 
 // Called every frame
