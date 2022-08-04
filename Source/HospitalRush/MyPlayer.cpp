@@ -5,6 +5,7 @@
 #include "Patient.h"
 #include "Bed.h"
 #include "ActionArea.h"
+#include "Treatment.h"
 #include "MyPlayer.h"
 
 // Sets default values
@@ -28,38 +29,11 @@ void AMyPlayer::BeginPlay()
 	Super::BeginPlay();
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMyPlayer::OnOverlapBegin);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AMyPlayer::OnOverlapEnd);
-
-	//BossDied.AddDynamic(this, &AMyPlayer::OnBossDied);
 }
 
-// Called every frame
 void AMyPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void AMyPlayer::CollectPatient(APatient* pPatient)
-{
-	listPatient.Add(pPatient);
-	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
-		holderComponent->GetRelativeLocation().Y,
-		holderComponent->GetRelativeLocation().Z +  patientHeightAmount));
-}
-
-void AMyPlayer::RemovePatient(APatient* pPatient)
-{
-	listPatient.Remove(pPatient);
-	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
-		holderComponent->GetRelativeLocation().Y,
-		holderComponent->GetRelativeLocation().Z - patientHeightAmount));
-}
-
-APatient* AMyPlayer::GetFirstAvailablePatient()
-{
-	if (listPatient.Num() > 0 && listPatient[listPatient.Num() - 1])
-		return listPatient[listPatient.Num() - 1];
-	
-	return nullptr;
 }
 
 void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -104,3 +78,53 @@ void AMyPlayer::OnBossDied(FVector location)
 {
 	UE_LOG(LogTemp, Warning, TEXT("BOSS DIED!"));
 }
+
+
+#pragma region Patient
+
+void AMyPlayer::CollectPatient(APatient* pPatient)
+{
+	listPatient.Add(pPatient);
+	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
+		holderComponent->GetRelativeLocation().Y,
+		holderComponent->GetRelativeLocation().Z + patientHeightAmount));
+}
+
+void AMyPlayer::RemovePatient(APatient* pPatient)
+{
+	listPatient.Remove(pPatient);
+	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
+		holderComponent->GetRelativeLocation().Y,
+		holderComponent->GetRelativeLocation().Z - patientHeightAmount));
+}
+
+APatient* AMyPlayer::GetFirstAvailablePatient()
+{
+	if (listPatient.Num() > 0 && listPatient[listPatient.Num() - 1])
+		return listPatient[listPatient.Num() - 1];
+
+	return nullptr;
+}
+#pragma endregion
+
+
+#pragma region Treatment
+
+void AMyPlayer::AddTreatment(ATreatment* pTreatment)
+{
+	pTreatment->Grapped(Cast<AActor>(this), holderComponent);
+	listTreatment.Add(pTreatment);
+	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
+		holderComponent->GetRelativeLocation().Y,
+		holderComponent->GetRelativeLocation().Z + treatmentHeightAmount));
+}
+
+void AMyPlayer::GiveTreatment(ATreatment* pTreatment)
+{
+	listTreatment.Remove(pTreatment);
+	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
+		holderComponent->GetRelativeLocation().Y,
+		holderComponent->GetRelativeLocation().Z - treatmentHeightAmount));
+}
+
+#pragma endregion

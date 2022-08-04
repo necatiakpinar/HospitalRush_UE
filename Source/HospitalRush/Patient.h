@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PaperSpriteComponent.h"
+#include "MyEnums.h"
 #include "Patient.generated.h"
 
 class AMyPlayer;
 class ABed;
+class UDATreatmentIcons;
 
 UCLASS()
 class HOSPITALRUSH_API APatient : public ACharacter
@@ -19,7 +22,16 @@ public:
 	APatient();
 
 public:
+	UPaperSpriteComponent*  spriteCompTreatment;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) EPatientStatus patientStatus;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) UDATreatmentIcons* daTreatmentIcons;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) ETreatmentType treatmentType;
+
+private:
 	AMyPlayer* player;
+
+
 public:
 	UFUNCTION()
 	void Grapped(AActor* pPlayer, USceneComponent* pHolder);
@@ -37,6 +49,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
-
+	
 };

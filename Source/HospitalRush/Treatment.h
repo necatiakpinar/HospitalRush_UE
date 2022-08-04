@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MyEnums.h"
 #include "Treatment.generated.h"
 
 
@@ -13,13 +14,7 @@ public:
 	void OnTreatmentSpawn();
 };
 
-UENUM(BlueprintType)
-enum class ETreatmentType: uint8
-{
-	Treatment_Pill UMETA(DisplayName = "TreatmentPill"),
-	Treatment_Syrup UMETA(DisplayName = "TreatmentSyrup")
-};
-
+class AMyPlayer;
 
 UCLASS()
 class HOSPITALRUSH_API ATreatment : public AActor
@@ -37,8 +32,7 @@ public:
 
 
 private:
-	AActor* treatmentPill;
-	AActor* treatmentSyrup;
+	AActor* treatmentObject;
 public:
 	//static FSpawnTreatment OnSpawnTreatment;
 
@@ -49,7 +43,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
-	void SpawnTreatment();
+
+	UFUNCTION()
+		void SpawnTreatment(AMyPlayer* pPlayer);
+	UFUNCTION()
+		void Grapped(AActor* pPlayer, USceneComponent* pHolder);
 
 };

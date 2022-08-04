@@ -17,6 +17,7 @@ class UStaticMeshComponent;
 class AActionArea;
 class APatient;
 class ABed;
+class ATreatment;
 UCLASS()
 class HOSPITALRUSH_API AMyPlayer : public ACharacter
 {
@@ -44,25 +45,26 @@ public:
 	UPROPERTY(EditAnywhere, meta = (MakeEditWidget = true)) FVector Bullet_SpawnLocation;
 	UPROPERTY(EditAnywhere) USceneComponent* holderComponent;
 	UPROPERTY(VisibleAnywhere) TArray<APatient*> listPatient;
+	UPROPERTY(VisibleAnywhere) TArray<ATreatment*> listTreatment;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Enery;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Mood;
 
-	
-
 private:
 	float currentZHeight;
 	float patientHeightAmount = 50.0f;
+	float treatmentHeightAmount = 50.0f;
 
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void AddTreatment(ATreatment* pTreatment);
+	void GiveTreatment(ATreatment* pTreatment);
+
 
 private:
 	void CollectPatient(APatient* pPatient);

@@ -3,6 +3,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Treatment.h"
 #include "MyPlayer.h"
+#include "MyEnums.h"
 #include "ActionArea.h"
 
 // Sets default values
@@ -18,9 +19,11 @@ AActionArea::AActionArea()
 void AActionArea::BeginPlay()
 {
 	Super::BeginPlay();
-	const TEnumAsByte<EActionType> ActionEnum = actionType;
-	actionTypeAsString = UEnum::GetValueAsString(ActionEnum.GetValue());
-
+	
+	if (actionPerformer && actionPerformerType == EActionPerformerType::Treatment)
+	{
+		treatmentObject = Cast<ATreatment>(actionPerformer);
+	}
 }
 
 
@@ -46,35 +49,12 @@ void AActionArea::ActionFinished()
 {
 	if (canActionPerform)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Action performed!"));
-		/*if (player)
-			player->BossDied.Broadcast(FVector(0.0f))*/;
-			//ATreatment:: OnSpawnTreatment.Broadcast(FVector(0.0f));
-			//ATreatment::OnSpawnTreatment.Broadcast(FVector(0.0f));
-			if (UWorld* world = GetWorld())
-			{
-				ATreatment* treatment;
-				TArray<AActor*> outputActors;
-				UGameplayStatics::GetAllActorsOfClass(world, ATreatment::StaticClass(), outputActors);
-
-				for (AActor* outputActor : outputActors)
-				{
-					treatment = Cast<ATreatment>(outputActor);
-					const TEnumAsByte<ETreatmentType> TreatmentEnum = treatment->treatmentType;
-					FString	stringTreatmentType = UEnum::GetValueAsString(TreatmentEnum.GetValue());
-					UE_LOG(LogTemp, Warning, TEXT("%s"),*actionTypeAsString);
-					UE_LOG(LogTemp, Warning, TEXT("%s"), *stringTreatmentType);
-					if (actionTypeAsString == stringTreatmentType)
-					{
-						treatment->SpawnTreatment();
-					}
-				}
-			
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Action CAN'T performed!"));
-			}
+		if (treatmentObject)
+			treatmentObject->SpawnTreatment(player);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Action CAN'T performed!"));
 	}
 }
 

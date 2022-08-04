@@ -4,17 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MyEnums.h"
 #include "ActionArea.generated.h"
 
 
-UENUM(BlueprintType)
-enum class EActionType : uint8
-{
-	Treatment_Pill UMETA(DisplayName = "TreatmentPill"),
-	Treatment_Syrup UMETA(DisplayName = "TreatmentSyrup")
-};
-
 class AMyPlayer;
+class MyEnums;
+class ATreatment;
+
 UCLASS()
 class HOSPITALRUSH_API AActionArea : public AActor
 {
@@ -26,13 +23,15 @@ public:
 
 public:
 	bool canActionPerform;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) EActionType actionType;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)	 AActor* actionPerformer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) EActionPerformerType actionPerformerType;
+	ATreatment* treatmentObject;
+
 
 private:
 	FTimerHandle timeHandler;
 	float TimerDuration;
 	AMyPlayer* player;
-	FString actionTypeAsString;
 
 protected:
 	// Called when the game starts or when spawned

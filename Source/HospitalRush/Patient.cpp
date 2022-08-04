@@ -2,6 +2,8 @@
 
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "MyPlayer.h"
+#include "MyEnums.h"
+#include "DATreatmentIcons.h"
 #include "Patient.h"
 
 // Sets default values
@@ -12,23 +14,24 @@ APatient::APatient()
 
 }
 
-
-
 // Called when the game starts or when spawned
 void APatient::BeginPlay()
 {
 	Super::BeginPlay();
-	/*player = Cast<AMyPlayer>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	spriteCompTreatment = Cast<UPaperSpriteComponent>(GetComponentByClass(UPaperSpriteComponent::StaticClass()));
 
-	if (player)
-		player->BossDied.AddDynamic(this, &APatient::BossDied);*/
+	if (spriteCompTreatment)
+	{
+	//	treatmentType = ETreatmentType::Treatment_Syrup;
+		UPaperSprite* treatmentSprite = daTreatmentIcons->GetPaperSprite(treatmentType);
+		spriteCompTreatment->SetSprite(daTreatmentIcons->GetPaperSprite(treatmentType));
+	}
 }
 
 // Called every frame
 void APatient::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APatient::BossDied(FVector location)
@@ -42,18 +45,15 @@ void APatient::Grapped(AActor* pPlayer, USceneComponent* pHolder)
 	this->AttachToActor(pPlayer, FAttachmentTransformRules::KeepRelativeTransform);
 	SetActorRelativeLocation(pHolder->GetComponentTransform().GetLocation());
 	SetActorRotation(FRotator(0.0f,0.0f, -90.0f));
-
 }
-
-
 
 void APatient::SleepOnBed(AActor* pBed)
 {
+	patientStatus = EPatientStatus::Admitted;
 	this->AttachToActor(pBed, FAttachmentTransformRules::KeepRelativeTransform);
 	SetActorRelativeLocation(FVector(0.0f,0.0f,50.0f));
 	SetActorRotation(FRotator(0.0f, -90.0f, -90.0f));
 	UE_LOG(LogTemp, Warning,TEXT("Worked!"));
-
 }
 
 

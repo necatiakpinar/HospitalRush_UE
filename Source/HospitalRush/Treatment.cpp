@@ -1,34 +1,29 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Kismet/GameplayStatics.h"
+#include "MyPlayer.h"
 #include "Treatment.h"
 
 
 // Sets default values
 ATreatment::ATreatment()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void ATreatment::BeginPlay()
 {
 	Super::BeginPlay();
-	//SpawnTreatment();
-
-
 }
 
 // Called every frame
 void ATreatment::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-void ATreatment::SpawnTreatment()
+void ATreatment::SpawnTreatment(AMyPlayer* pPlayer)
 {
 	UE_LOG(LogTemp, Warning, TEXT("WORKING"));
 	FActorSpawnParameters SpawnInfo;
@@ -37,12 +32,24 @@ void ATreatment::SpawnTreatment()
 
 	if (treatmentPillBP && treatmentType == ETreatmentType::Treatment_Pill)
 	{
-		treatmentPill = GetWorld()-> SpawnActor<AActor>(treatmentPillBP,SpawnTransform);
+		treatmentObject = GetWorld()-> SpawnActor<AActor>(treatmentPillBP,SpawnTransform);
 	}
 	else if (treatmentSyrupBP && treatmentType == ETreatmentType::Treatment_Syrup)
 	{
-		treatmentSyrup = GetWorld()->SpawnActor<AActor>(treatmentSyrupBP, SpawnTransform);
+		treatmentObject = GetWorld()->SpawnActor<AActor>(treatmentSyrupBP, SpawnTransform);
+	}
+
+	if (treatmentObject)
+	{
+		pPlayer->AddTreatment(this);
 	}
 	
+}
+
+void ATreatment::Grapped(AActor* pPlayer, USceneComponent* pHolder)
+{
+	treatmentObject->AttachToActor(pPlayer, FAttachmentTransformRules::KeepRelativeTransform);
+	treatmentObject->SetActorRelativeLocation(pHolder->GetComponentTransform().GetLocation());
+	treatmentObject->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
 }
 
