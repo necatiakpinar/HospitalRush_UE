@@ -10,6 +10,7 @@
 
 class AMyPlayer;
 class ABed;
+class ATreatment;
 class UDATreatmentIcons;
 
 UCLASS()
@@ -45,9 +46,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void SetRandomTreatment();
+	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	void SetPatientStatus(EPatientStatus pPatientStatus);
+	void TakeTreatment();
 
 	
 };

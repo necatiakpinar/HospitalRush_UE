@@ -38,15 +38,28 @@ void AMyPlayer::Tick(float DeltaTime)
 
 void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("STARTED!"));
+//	UE_LOG(LogTemp, Warning, TEXT("STARTED!"));
 	APatient* patient = Cast<APatient>(OtherActor);
 	ABed* bed = Cast<ABed>(OtherActor);
 	AActionArea* actionArea= Cast<AActionArea>(OtherActor);
 
 	if (patient)
 	{
-		patient->Grapped(Cast<AActor>(this), holderComponent);
-		CollectPatient(patient);
+		UE_LOG(LogTemp, Warning, TEXT("Catched!"));
+		switch (patient->patientStatus)
+		{
+			case EPatientStatus::Idle:
+				patient->Grapped(Cast<AActor>(this), holderComponent);
+				CollectPatient(patient);
+			break;
+
+			case EPatientStatus::Admitted:
+				if (IsTreatmentExist(patient->treatmentType))
+					patient->TakeTreatment();
+				else
+					return;
+			break;
+		}
 	}
 	
 	if (bed)
@@ -66,7 +79,7 @@ void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 
 void AMyPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ENDED!"));
+	//UE_LOG(LogTemp, Warning, TEXT("ENDED!"));
 	AActionArea* actionArea = Cast<AActionArea>(OtherActor);
 	if (actionArea)
 	{
@@ -76,7 +89,7 @@ void AMyPlayer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 
 void AMyPlayer::OnBossDied(FVector location)
 {
-	UE_LOG(LogTemp, Warning, TEXT("BOSS DIED!"));
+	//UE_LOG(LogTemp, Warning, TEXT("BOSS DIED!"));
 }
 
 
@@ -125,6 +138,32 @@ void AMyPlayer::GiveTreatment(ATreatment* pTreatment)
 	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
 		holderComponent->GetRelativeLocation().Y,
 		holderComponent->GetRelativeLocation().Z - treatmentHeightAmount));
+}
+
+bool AMyPlayer::IsTreatmentExist(ETreatmentType pTreatmentType)
+{
+	ATreatment* treatmentInPlayerHands = nullptr;
+
+	if (listTreatment.Num() > 0)
+	{
+		for (uint8 i = listTreatment.Num() - 1; i > -1; i--)
+		{
+			if (pTreatmentType == listTreatment[i]->treatmentType)
+			{
+				treatmentInPlayerHands = listTreatment[i];
+				break;
+			}
+		}
+
+		if (treatmentInPlayerHands != nullptr)
+		{
+			GiveTreatment(treatmentInPlayerHands);
+			return true;
+		}
+
+	}
+
+	return false;
 }
 
 #pragma endregion

@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "MyEnums.h"
 #include "MyPlayer.generated.h"
 
 
@@ -64,7 +65,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void AddTreatment(ATreatment* pTreatment);
 	void GiveTreatment(ATreatment* pTreatment);
-
+	bool IsTreatmentExist(ETreatmentType pTreatmentType);
 
 private:
 	void CollectPatient(APatient* pPatient);
