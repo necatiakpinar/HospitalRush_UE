@@ -50,7 +50,6 @@ void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 		switch (patient->patientStatus)
 		{
 			case EPatientStatus::Idle:
-				patient->Grapped(Cast<AActor>(this), holderComponent);
 				CollectPatient(patient);
 			break;
 
@@ -106,9 +105,13 @@ void AMyPlayer::CollectPatient(APatient* pPatient)
 		RemoveAllTreatments();
 
 	listPatient.Add(pPatient);
+	pPatient->Grapped(Cast<AActor>(this), holderComponent);
+
 	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
 		holderComponent->GetRelativeLocation().Y,
 		holderComponent->GetRelativeLocation().Z + patientHeightAmount));
+
+
 }
 
 void AMyPlayer::RemovePatient(APatient* pPatient)
