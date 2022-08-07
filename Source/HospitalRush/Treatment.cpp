@@ -2,6 +2,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "MyPlayer.h"
+#include "TreatmentProduct.h"
 #include "Treatment.h"
 
 
@@ -25,7 +26,6 @@ void ATreatment::Tick(float DeltaTime)
 
 void ATreatment::SpawnTreatment(AMyPlayer* pPlayer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("WORKING"));
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.Owner = NULL;
 	const FTransform SpawnTransform(FQuat::Identity, FVector(0.0f, 10.0f, 100.0f));
@@ -41,15 +41,9 @@ void ATreatment::SpawnTreatment(AMyPlayer* pPlayer)
 
 	if (treatmentObject)
 	{
-		pPlayer->AddTreatment(this);
+		pPlayer->AddTreatment(Cast<ATreatmentProduct>(treatmentObject));
 	}
 	
 }
 
-void ATreatment::Grapped(AActor* pPlayer, USceneComponent* pHolder)
-{
-	treatmentObject->AttachToActor(pPlayer, FAttachmentTransformRules::KeepRelativeTransform);
-	treatmentObject->SetActorRelativeLocation(pHolder->GetComponentTransform().GetLocation());
-	treatmentObject->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
-}
 

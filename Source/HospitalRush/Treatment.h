@@ -15,6 +15,7 @@ public:
 };
 
 class AMyPlayer;
+class ATreatmentProduct;
 
 UCLASS()
 class HOSPITALRUSH_API ATreatment : public AActor
@@ -26,8 +27,8 @@ public:
 	ATreatment();
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSubclassOf<AActor> treatmentPillBP;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSubclassOf<AActor> treatmentSyrupBP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSubclassOf<ATreatmentProduct> treatmentPillBP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TSubclassOf<ATreatmentProduct> treatmentSyrupBP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) ETreatmentType treatmentType;
 
 
@@ -46,7 +47,5 @@ public:
 
 	UFUNCTION()
 		void SpawnTreatment(AMyPlayer* pPlayer);
-	UFUNCTION()
-		void Grapped(AActor* pPlayer, USceneComponent* pHolder);
-
+	
 };

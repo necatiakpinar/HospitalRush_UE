@@ -19,6 +19,7 @@ class AActionArea;
 class APatient;
 class ABed;
 class ATreatment;
+class ATreatmentProduct;
 UCLASS()
 class HOSPITALRUSH_API AMyPlayer : public ACharacter
 {
@@ -46,7 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, meta = (MakeEditWidget = true)) FVector Bullet_SpawnLocation;
 	UPROPERTY(EditAnywhere) USceneComponent* holderComponent;
 	UPROPERTY(VisibleAnywhere) TArray<APatient*> listPatient;
-	UPROPERTY(VisibleAnywhere) TArray<ATreatment*> listTreatment;
+	UPROPERTY(VisibleAnywhere) TArray<ATreatmentProduct*> listTreatment;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float Enery;
@@ -63,13 +64,15 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	void AddTreatment(ATreatment* pTreatment);
-	void GiveTreatment(ATreatment* pTreatment);
-	bool IsTreatmentExist(ETreatmentType pTreatmentType);
+	void AddTreatment(ATreatmentProduct* pTreatment);
+	void GiveTreatment(int pTreatment);
+	int GetTreatmentIndex(ETreatmentType pTreatmentType);
 
 private:
 	void CollectPatient(APatient* pPatient);
 	void RemovePatient(APatient* pPatient);
+	void RemoveAllTreatments();
+	void RemoveAllPatients();
 	APatient* GetFirstAvailablePatient();
 
 };

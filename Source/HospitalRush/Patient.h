@@ -31,8 +31,7 @@ public:
 
 private:
 	AMyPlayer* player;
-
-
+	ABed* bed;
 public:
 	UFUNCTION()
 	void Grapped(AActor* pPlayer, USceneComponent* pHolder);

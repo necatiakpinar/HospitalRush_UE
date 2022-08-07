@@ -23,6 +23,7 @@ UENUM(BlueprintType)
 enum class EPatientStatus: uint8
 {
 	Idle UMETA(DisplayName = "Idle"),
+	Carrying UMETA(DisplayName = "Carrying"),
 	Walking_To_WaitingArea UMETA(DisplayName = "WalkingToWaitingArea"),
 	Admitted UMETA(DisplayName = "Admitted "),
 	Treated UMETA(DisplayName = "Treated "),

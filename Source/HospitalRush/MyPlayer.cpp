@@ -6,6 +6,7 @@
 #include "Bed.h"
 #include "ActionArea.h"
 #include "Treatment.h"
+#include "TreatmentProduct.h"
 #include "MyPlayer.h"
 
 // Sets default values
@@ -45,7 +46,7 @@ void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 
 	if (patient)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Catched!"));
+
 		switch (patient->patientStatus)
 		{
 			case EPatientStatus::Idle:
@@ -54,8 +55,12 @@ void AMyPlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 			break;
 
 			case EPatientStatus::Admitted:
-				if (IsTreatmentExist(patient->treatmentType))
+				int patientTreatmentIndex = GetTreatmentIndex(patient->treatmentType);
+				if (patientTreatmentIndex != -1)
+				{
+					GiveTreatment(patientTreatmentIndex);
 					patient->TakeTreatment();
+				}
 				else
 					return;
 			break;
@@ -97,6 +102,9 @@ void AMyPlayer::OnBossDied(FVector location)
 
 void AMyPlayer::CollectPatient(APatient* pPatient)
 {
+	if (listTreatment.Num() > 0)
+		RemoveAllTreatments();
+
 	listPatient.Add(pPatient);
 	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
 		holderComponent->GetRelativeLocation().Y,
@@ -111,6 +119,20 @@ void AMyPlayer::RemovePatient(APatient* pPatient)
 		holderComponent->GetRelativeLocation().Z - patientHeightAmount));
 }
 
+void AMyPlayer::RemoveAllPatients()
+{
+	for (APatient* patient : listPatient)
+	{
+		holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
+			holderComponent->GetRelativeLocation().Y,
+			holderComponent->GetRelativeLocation().Z - patientHeightAmount));
+		
+		patient->Destroy();
+	}
+
+	listPatient.Empty();
+}
+
 APatient* AMyPlayer::GetFirstAvailablePatient()
 {
 	if (listPatient.Num() > 0 && listPatient[listPatient.Num() - 1])
@@ -123,8 +145,12 @@ APatient* AMyPlayer::GetFirstAvailablePatient()
 
 #pragma region Treatment
 
-void AMyPlayer::AddTreatment(ATreatment* pTreatment)
+void AMyPlayer::AddTreatment(ATreatmentProduct* pTreatment)
 {
+	if (listPatient.Num() > 0)
+		RemoveAllPatients();
+
+
 	pTreatment->Grapped(Cast<AActor>(this), holderComponent);
 	listTreatment.Add(pTreatment);
 	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
@@ -132,38 +158,42 @@ void AMyPlayer::AddTreatment(ATreatment* pTreatment)
 		holderComponent->GetRelativeLocation().Z + treatmentHeightAmount));
 }
 
-void AMyPlayer::GiveTreatment(ATreatment* pTreatment)
+void AMyPlayer::GiveTreatment(int pTreatmentIndex)
 {
-	listTreatment.Remove(pTreatment);
+	listTreatment[pTreatmentIndex]->Destroy();
+	listTreatment.RemoveAt(pTreatmentIndex);
 	holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
 		holderComponent->GetRelativeLocation().Y,
 		holderComponent->GetRelativeLocation().Z - treatmentHeightAmount));
 }
 
-bool AMyPlayer::IsTreatmentExist(ETreatmentType pTreatmentType)
+int AMyPlayer::GetTreatmentIndex(ETreatmentType pTreatmentType)
 {
-	ATreatment* treatmentInPlayerHands = nullptr;
-
+	int treatmentIndex = -1;
+	
 	if (listTreatment.Num() > 0)
 	{
-		for (uint8 i = listTreatment.Num() - 1; i > -1; i--)
+		for (int i = listTreatment.Num() - 1; i >= 0; i--)
 		{
 			if (pTreatmentType == listTreatment[i]->treatmentType)
 			{
-				treatmentInPlayerHands = listTreatment[i];
-				break;
+				return i;
 			}
 		}
-
-		if (treatmentInPlayerHands != nullptr)
-		{
-			GiveTreatment(treatmentInPlayerHands);
-			return true;
-		}
-
+	}
+	return treatmentIndex;
+}
+void AMyPlayer::RemoveAllTreatments()
+{
+	for (ATreatmentProduct* treatment : listTreatment)
+	{
+		holderComponent->SetRelativeLocation(FVector(holderComponent->GetRelativeLocation().X,
+			holderComponent->GetRelativeLocation().Y,
+			holderComponent->GetRelativeLocation().Z - treatmentHeightAmount));
+		treatment->Destroy();
 	}
 
-	return false;
+	listTreatment.Empty();
 }
 
 #pragma endregion

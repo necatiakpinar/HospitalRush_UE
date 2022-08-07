@@ -13,7 +13,6 @@ ABed::ABed()
 	holderComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Of"));
 	AddInstanceComponent(holderComponent);
 	//SetRootComponent(meshComponent);
-
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +39,10 @@ void ABed::CollectPatient(APatient* pPatient)
 	{
 		currentCapacity++;
 		if (currentCapacity == totalCapacity)
+		{
+			meshComponent->SetCollisionProfileName(TEXT("NoCollision"));
 			isFull = true;
+		}
 
 		listPatient.Add(pPatient);
 
@@ -54,7 +56,11 @@ void ABed::RemovePatient(APatient* pPatient)
 	{
 		currentCapacity--;
 		if (currentCapacity < totalCapacity)
+		{
+
+			meshComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 			isFull = false;
+		}
 		
 		listPatient.Remove(pPatient);
 	}

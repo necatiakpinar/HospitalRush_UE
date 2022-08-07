@@ -2,6 +2,7 @@
 
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "MyPlayer.h"
+#include "Bed.h"
 #include "Treatment.h"
 #include "DATreatmentIcons.h"
 #include "Patient.h"
@@ -23,18 +24,20 @@ void APatient::BeginPlay()
 
 }
 
-
 // Called every frame
 void APatient::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-
-
 void APatient::BossDied(FVector location)
 {
 	Destroy();
+}
+
+void APatient::SetPatientStatus(EPatientStatus pPatientStatus)
+{
+	patientStatus = pPatientStatus;
 }
 
 void APatient::Grapped(AActor* pPlayer, USceneComponent* pHolder)
@@ -43,16 +46,18 @@ void APatient::Grapped(AActor* pPlayer, USceneComponent* pHolder)
 	this->AttachToActor(pPlayer, FAttachmentTransformRules::KeepRelativeTransform);
 	SetActorRelativeLocation(pHolder->GetComponentTransform().GetLocation());
 	SetActorRotation(FRotator(0.0f,0.0f, -90.0f));
+	SetPatientStatus(EPatientStatus::Carrying);
 }
 
 void APatient::SleepOnBed(AActor* pBed)
 {
-	GetMesh()->SetCollisionProfileName(TEXT("Patient"));
+	bed = Cast<ABed>(pBed);
 	SetPatientStatus(EPatientStatus::Admitted);
 	this->AttachToActor(pBed, FAttachmentTransformRules::KeepRelativeTransform);
 	SetActorRelativeLocation(FVector(0.0f,0.0f,50.0f));
 	SetActorRotation(FRotator(0.0f, -90.0f, -90.0f));
 	SetRandomTreatment();
+	GetMesh()->SetCollisionProfileName(TEXT("Patient"));
 }
 
 void APatient::SetRandomTreatment()
@@ -69,13 +74,10 @@ void APatient::SetRandomTreatment()
 	}
 }
 
-void APatient::SetPatientStatus(EPatientStatus pPatientStatus)
-{
-	patientStatus = pPatientStatus;
-}
-
 void APatient::TakeTreatment()
 {
-	//Destroy();
-	UE_LOG(LogTemp, Warning, TEXT("Patient became well"));
+	bed->RemovePatient(this);
+	SetPatientStatus(EPatientStatus::Treated);
+	Destroy();
+
 }
